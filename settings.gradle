@@ -1,0 +1,22 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://maven.pkg.github.com/hexf/nzcovidpass4j"
+            credentials {
+                username "${gprUser ?: System.getenv("USERNAME")}"
+                password "${gprKey ?: System.getenv("TOKEN")}"
+            }
+        }
+        maven {
+            url "https://repo.danubetech.com/repository/maven-public/"
+        }
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+rootProject.name = "CovidPass Checker"
+include ':app'
