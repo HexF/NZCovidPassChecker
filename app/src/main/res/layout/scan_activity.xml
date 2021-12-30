@@ -19,7 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:layout_weight="5"
-            />
+            >
+
+        </androidx.camera.view.PreviewView>
+
+        <TextView
+            android:id="@+id/scanStripe"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@drawable/scan_stripe_waiting" />
 
         <LinearLayout
             android:layout_width="match_parent"

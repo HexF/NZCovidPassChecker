@@ -51,6 +51,10 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var waitingBackground: Drawable
     private lateinit var okBackground: Drawable
 
+    private lateinit var errorStripe: Drawable
+    private lateinit var waitingStripe: Drawable
+    private lateinit var okStripe: Drawable
+
     private var resetTimer = Timer()
     private var lastScannedBarcode: String? = null
     private var lastScannedStatus: ScanStatus? = null
@@ -69,6 +73,14 @@ class ScanActivity : AppCompatActivity() {
             R.drawable.scan_border_waiting
         )!!
         okBackground = AppCompatResources.getDrawable(applicationContext, R.drawable.scan_border_ok)!!
+
+        errorStripe = AppCompatResources.getDrawable(applicationContext,
+            R.drawable.scan_stripe_error
+        )!!
+        waitingStripe = AppCompatResources.getDrawable(applicationContext,
+            R.drawable.scan_stripe_waiting
+        )!!
+        okStripe = AppCompatResources.getDrawable(applicationContext, R.drawable.scan_stripe_ok)!!
 
         database = DatabaseHelper(applicationContext)
 
@@ -126,6 +138,7 @@ class ScanActivity : AppCompatActivity() {
         binding.dateOfBirth.text = getString(R.string.scan_dob_empty)
         binding.statusText.text = getString(R.string.scan_status_waiting)
         binding.rootLayout.background = waitingBackground
+        binding.scanStripe.background = waitingStripe
         binding.moreInfoButton.isEnabled = false
     }
 
@@ -147,6 +160,9 @@ class ScanActivity : AppCompatActivity() {
             if(status == ScanStatus.VALID) okBackground
             else errorBackground
 
+        binding.scanStripe.background =
+            if(status == ScanStatus.VALID) okStripe
+            else errorStripe
 
         if (pass == null) return
 
