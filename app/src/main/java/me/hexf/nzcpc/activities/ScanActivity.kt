@@ -4,11 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
-import android.os.Build
-import android.os.Bundle
-import android.os.StrictMode
+import android.os.*
 import android.os.StrictMode.ThreadPolicy
-import android.os.Vibrator
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -229,9 +226,10 @@ class ScanActivity : AppCompatActivity() {
                                 // Vibrate to indicate scanned
                                 if(lastScannedBarcode == barcode.rawValue)
                                     return@forEach
+                                lastScannedBarcode = ""
 
                                 queueDisplayReset()
-                                getSystemService<Vibrator>()?.vibrate(100)
+
                                 var scanStatus: ScanStatus
                                 var pass : CovidPass? = null
 
@@ -266,6 +264,20 @@ class ScanActivity : AppCompatActivity() {
 
                                 lastScannedStatus = scanStatus
 
+                                val pattern =
+                                    if(scanStatus == ScanStatus.VALID)
+                                        arrayOf(0L,100L,200L,100L)
+                                    else
+                                        arrayOf(0L,1000L)
+
+                                val vibrator = getSystemService<Vibrator>()
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    vibrator?.vibrate(VibrationEffect.createWaveform(pattern.toLongArray(), -1))
+                                }else{
+                                    vibrator?.vibrate(pattern.toLongArray(), -1)
+                                }
+
                                 displayPass(pass, scanStatus)
                             }
                         }
@@ -298,7 +310,7 @@ class ScanActivity : AppCompatActivity() {
     }
 
     fun openMoreInfo(view: View){
-        val intent = Intent(this, ScanInfoActivity::class.java).apply {
+        val intent = Intent(view.context, ScanInfoActivity::class.java).apply {
             putExtra(COVIDPASS_EXTRA,  lastScannedBarcode as String)
             putExtra(SCANSTATUS_EXTRA, lastScannedStatus as Serializable)
         }
