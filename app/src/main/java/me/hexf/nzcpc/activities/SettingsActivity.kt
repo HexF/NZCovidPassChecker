@@ -24,6 +24,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: SettingsActivityBinding
     private lateinit var app: Application
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SettingsActivityBinding.inflate(layoutInflater)
@@ -112,7 +113,7 @@ class SettingsActivity : AppCompatActivity() {
 
             locators.forEach { locator ->
                 val pref = Preference(ctx).apply {
-                    title = locator.key
+                    title = getLocatorFriendlyName(locator.key)
                     summary =
                         if(locator.value.first == null) "Never Synced"
                         else "Last Synced: " + locator.value.first.toString()
@@ -180,6 +181,15 @@ class SettingsActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
+            }
+        }
+
+
+        private fun getLocatorFriendlyName(locator: String): String{
+            return when(locator){
+                "did:web:nzcp.identity.health.nz" -> "Ministry of Health"
+                "did:web:nzcp.covid19.health.nz" -> "Ministry of Health Development"
+                else -> locator
             }
         }
 
